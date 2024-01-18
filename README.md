@@ -28,7 +28,7 @@ This is an rest api.
 git@github.com:upALX/Omni-Orpen.git
 ```
 
-**Wait more instruction, because this project is under development...**
+**Wait more instructions, because this project is under development...**
 
 ## Make your mark :triangular_flag_on_post:   
 
