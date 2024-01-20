@@ -11,7 +11,7 @@ This is an rest api that consult weather data without the need for identificatio
 ---
 
 ## Tech stack
-![Javascript](https://img.shields.io/badge/-Javascript-05122A?style=flat&logo=python)&nbsp;
+![typescript](https://img.shields.io/badge/-typescript-05122A?style=flat&logo=typescript)&nbsp;
 ![Node.js](https://img.shields.io/badge/-Node.js-05122A?style=flat&logo=Node.js)&nbsp;
 ![NestJS](https://img.shields.io/badge/-NestJS-05122A?style=flat&logo=NestJS)&nbsp;
 ![postgresql](https://img.shields.io/badge/-postgresql-05122A?style=flat&logo=postgresql)&nbsp;
