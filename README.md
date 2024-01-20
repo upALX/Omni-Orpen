@@ -1,8 +1,8 @@
-# Omni-Orpen
+# Orpen Weather
 
 **Overview**
 
-This is an rest api.
+This is an rest api that consult weather data without the need for identification by the user.
 
 🛠️*This project is under development*🛠️
 
