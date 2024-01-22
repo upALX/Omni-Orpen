@@ -20,7 +20,6 @@ This is an rest api that consult weather data without the need for identificatio
 ## How to use 🫁
 
 **requirements:**
-  - Node >= 18.17.1
   - Docker >= 24.0.7
 
 **1 - Clone this repo:**
