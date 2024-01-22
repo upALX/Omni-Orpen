@@ -21,7 +21,6 @@ This is an rest api that consult weather data without the need for identificatio
 
 **requirements:**
   - Node >= 18.17.1
-  - NestJS >= 10.3.0
   - Docker >= 24.0.7
 
 **1 - Clone this repo:**
