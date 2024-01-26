@@ -21,6 +21,7 @@ This is an rest api that consult weather data without the need for identificatio
 
 **requirements:**
   - Docker >= 24.0.7
+  - Docker compose >= 1.29.2
 
 **1 - Clone this repo:**
 ```
