@@ -13,13 +13,12 @@ export class WeatherResource {
 
   //TODO verify why the params are not in the rules
   @Get('/data')
-  public getWeatherData(@Query(new ValidationPipe({transform: true}))params: QueryValidationParamsDTO){
+  public async getWeatherData(@Query(new ValidationPipe({transform: true}))params: QueryValidationParamsDTO){
 
-
-    const weatherDataModel = this.weatherController.getAllDataWeather(
+    const weatherResponseDTO = await this.weatherController.getAllDataWeather(
       params.country, params.city
     )
 
-    return weatherDataModel
+    return JSON.stringify(weatherResponseDTO)
   }
 }

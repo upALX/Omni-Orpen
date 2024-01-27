@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { WeatherRepository } from './weather.repository';
 import { ConfigService } from '@nestjs/config';
+import { WeatherResponseDTO } from './dto/weatherResponse.dto';
 
 @Injectable()
 export class WeatherController {
@@ -16,22 +17,32 @@ export class WeatherController {
 
   public async getAllDataWeather(country: string, city: string): Promise<Object>{
 
-    //get cordinate by location
-    var coordinatesDataByLocationName = await this.getCoordinatesByCountryCity(city, country);
+    //Verify if the country and city are registry to receive webhook
 
-    console.log(coordinatesDataByLocationName)
+    //get cordinate by location
+    const coordinatesDataByLocationName = await this.getCoordinatesByCountryCity(city, country);
+
+    console.log(`The coordinates are: ${coordinatesDataByLocationName}`)
 
     //get all weather data by coordinate
     const weatherData = await this.getWeatherDataByCoordinates(coordinatesDataByLocationName.longitude, coordinatesDataByLocationName.longitude);
+
+    console.log(`The weather DATA are: ${weatherData}`)
     
     //save the data on database
-    
-    
+    const weatherModel = await this.weatherRepository.saveWeatherData(city, country, weatherData);
+
+    console.log(`The weather model was saved and has the key: ${weatherModel.weather_key}`)
+
+    const weatherResponseDTO = new WeatherResponseDTO(weatherModel.weather_key, weatherModel.weatherData);
+
+    console.log(`The DTO created: ${weatherResponseDTO}`)
+
     //return the data
-    return weatherData
+    return weatherResponseDTO
   }
 
-  private async getWeatherDataByCoordinates(longitude: string, latitude: string){
+  private async getWeatherDataByCoordinates(longitude: string, latitude: string): Promise<Object>{
     let weatherByCoordinatesURL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${this.apiKey}`;
 
     try{
