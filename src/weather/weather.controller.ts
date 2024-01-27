@@ -16,22 +16,61 @@ export class WeatherController {
 
   public async getAllDataWeather(country: string, city: string): Promise<Object>{
 
-
     //get cordinate by location
-    const coordinatesDataByLocationName = await this.getCoordinatesByCountryCity(city, country)
-
-    //get all weather data by cordinate
+    var coordinatesDataByLocationName = await this.getCoordinatesByCountryCity(city, country);
 
     console.log(coordinatesDataByLocationName)
+
+    //get all weather data by coordinate
+    const weatherData = await this.getWeatherDataByCoordinates(coordinatesDataByLocationName.longitude, coordinatesDataByLocationName.longitude);
     
     //save the data on database
     
     
     //return the data
-    return coordinatesDataByLocationName
+    return weatherData
   }
 
-  private async getCoordinatesByCountryCity(city: string, country: string): Promise<Object>{
+  private async getWeatherDataByCoordinates(longitude: string, latitude: string){
+    let weatherByCoordinatesURL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${this.apiKey}`;
+
+    try{
+      var weatherDataResponse = await fetch(weatherByCoordinatesURL)
+      .then(
+        (response) => {
+          if(!response.ok){
+            throw new Error(`Failed to fetch data on DATA BY COORDINATES. Status: ${response.status}`);
+          }
+          return response.json()
+        }
+      );
+
+      console.log(`The weather data from coordinates is ${weatherDataResponse}`)
+
+    }catch(errorCaught){
+      {
+        if (weatherDataResponse.status == 404){
+          throw new HttpException({
+            status: HttpStatus.NOT_FOUND,
+            error: `The weather for CITY and COUNTRY information was not found. Confirm if you are using the country codes ISO 3166`,
+          }, HttpStatus.NOT_FOUND,{
+              cause: errorCaught
+          });
+        }else{
+          throw new HttpException({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: `We found an internal error and we are fixing it`,
+          }, HttpStatus.INTERNAL_SERVER_ERROR,{
+              cause: errorCaught
+          });
+        }
+      }
+    };
+
+    return weatherDataResponse
+  }
+
+  private async getCoordinatesByCountryCity(city: string, country: string){
     
     let geocodingApiURL = `http://api.openweathermap.org/geo/1.0/direct?q=${city},${country}&limit=1&appid=${this.apiKey}`
 
@@ -40,7 +79,7 @@ export class WeatherController {
       .then(
         (response) => {
           if(!response.ok){
-            throw new Error(`Failed to fetch data. Status: ${response.status}`);
+            throw new Error(`Failed to fetch data on GET Coordinates by PARAMS. Status: ${response.status}`);
           }
           return response.json()
         }
@@ -51,7 +90,7 @@ export class WeatherController {
       var coordinates = {
         latitude: locationCoordinates.lat,
         longitude: locationCoordinates.lon,
-      };
+      }
 
       console.log(`The coordinates getted are: ${coordinates} `)
 
@@ -59,7 +98,7 @@ export class WeatherController {
       if (coordinatesDataResponse.status == 404){
         throw new HttpException({
           status: HttpStatus.NOT_FOUND,
-          error: `The result with this parameters was not found`,
+          error: `The result with this parameters ${city} and ${country} was not found. Confirm if you are using the country codes ISO 3166.`,
         }, HttpStatus.NOT_FOUND,{
             cause: errorCaught
         });
@@ -79,6 +118,7 @@ export class WeatherController {
         });
       }
     }
+
     return coordinates
   }
 }
