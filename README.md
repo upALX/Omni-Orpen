@@ -55,7 +55,7 @@ docker-compose up
 - In 'General', add a Name to the server of your choice;
 - In 'Connection', fil 
 - In the Connection tab, fill in the following details:
-    - Host name/address: OrpenWeatherDB
+    - Host name/address: postgres
     - Port: 5432
     - Maintenance database: postgres
     - Username: alx (same value username of ```.env``` file);
