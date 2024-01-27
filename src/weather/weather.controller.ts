@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { WeatherRepository } from './weather.repository';
 import { ConfigService } from '@nestjs/config';
 import { WeatherResponseDTO } from './dto/weatherResponse.dto';
+import { HistoryWeatherResponseDTO } from './dto/historyWeatherResponse.dto';
 
 @Injectable()
 export class WeatherController {
@@ -40,6 +41,22 @@ export class WeatherController {
 
     //return the data
     return weatherResponseDTO
+  }
+
+  public async getAllDataWeatherResquest(): Promise<Object>{
+
+    const allWeatherData = await this.weatherRepository.getAllDataRequests()
+
+    const allWeatherDataDTO = allWeatherData.map(
+      (weatherModel) => new HistoryWeatherResponseDTO(
+          weatherModel.city,
+          weatherModel.country,
+          weatherModel.createdAt,
+          weatherModel.weatherData
+        ) 
+    ) 
+
+    return allWeatherDataDTO
   }
 
   private async getWeatherDataByCoordinates(longitude: string, latitude: string): Promise<Object>{

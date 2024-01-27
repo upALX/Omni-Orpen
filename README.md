@@ -39,7 +39,7 @@ npm i
 DB_HOST=LOCALHOST
 DB_PORT=5432
 DB_USERNAME="alx"
-DB_PASSWORD="alx@root"
+DB_PASSWORD="alxroot"
 DB_NAME="weather_app"
 DB_ADMIN_EMAIL="alx@root.com"
 ```
@@ -59,7 +59,7 @@ docker-compose up
     - Port: 5432
     - Maintenance database: postgres
     - Username: alx (same value username of ```.env``` file);
-    - Password: alx@root (same value password of ```.env``` file)
+    - Password: alxroot (same value password of ```.env``` file)
 - Click to save connection.
 
 **6 - Access the databases of Orpen-Weather:**

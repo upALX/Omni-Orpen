@@ -21,4 +21,11 @@ export class WeatherResource {
 
     return JSON.stringify(weatherResponseDTO)
   }
+
+  @Get('/history')
+  public async getHistoryRequests(){
+    const weatherResponseDTO = await this.weatherController.getAllDataWeatherResquest()
+
+    return JSON.stringify(weatherResponseDTO)
+  }
 }

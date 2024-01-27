@@ -21,4 +21,10 @@ export class WeatherRepository {
 
       return model
     } 
+
+    public async getAllDataRequests(){
+      const model = await this.weatherRepository.find()
+
+      return model
+    }
 }
