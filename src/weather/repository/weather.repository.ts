@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { WeatherModel } from './model/weather.model';
-import { WebhooksModel } from './model/webhooks.model';
+import { WeatherModel } from '../model/weather.model';
 
 @Injectable()
 export class WeatherRepository {
   constructor(
     @InjectRepository(WeatherModel)
     private readonly weatherRepository: Repository<WeatherModel>,
-    @InjectRepository(WebhooksModel)
-    private readonly webhookRepository: Repository<WebhooksModel>,
     private weatherModelDB: WeatherModel,
-    private webhookModelDB: WebhooksModel
   ) {}
 
     public async saveWeatherData(city: string, country: string, weatherData: Object){
@@ -31,13 +27,4 @@ export class WeatherRepository {
       return model
     }
 
-    public async saveWeatherWebhook(city: string, country: string, webhookURL: string){
-      this.webhookModelDB.city = city
-      this.webhookModelDB.country = country
-      this.webhookModelDB.webhookURL = webhookURL
-
-      const model = await this.webhookRepository.save(this.webhookModelDB)
-
-      return model
-    }
 }

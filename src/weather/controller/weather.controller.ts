@@ -1,9 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { WeatherRepository } from './weather.repository';
+import { WeatherRepository } from '../repository/weather.repository';
 import { ConfigService } from '@nestjs/config';
-import { WeatherResponseDTO } from './dto/weatherResponse.dto';
-import { HistoryWeatherResponseDTO } from './dto/historyWeatherResponse.dto';
-import { WebhookResponseDTO } from './dto/webhookResponse.dto';
+import { WeatherResponseDTO } from '../dto/weatherResponse.dto';
+import { HistoryWeatherResponseDTO } from '../dto/historyWeatherResponse.dto';
 
 @Injectable()
 export class WeatherController {
@@ -34,6 +33,7 @@ export class WeatherController {
     //save the data on database
     const weatherModel = await this.weatherRepository.saveWeatherData(city, country, weatherData);
 
+
     console.log(`The weather model was saved and has the key: ${weatherModel.weather_key}`)
 
     const weatherResponseDTO = new WeatherResponseDTO(weatherModel.weather_key, weatherModel.weatherData);
@@ -58,17 +58,6 @@ export class WeatherController {
     ) 
 
     return allWeatherDataDTO
-  }
-
-  public async registryWeatherWebhook(city: string, country: string, webhookURL: string){
-    const weatherWebhookModel = await this.weatherRepository.saveWeatherWebhook(city, country, webhookURL)
-
-    const weatherWebhookDTO = new WebhookResponseDTO(
-      weatherWebhookModel.webhook_key, 
-      weatherWebhookModel.webhookURL
-    )
-    
-    return weatherWebhookDTO
   }
 
   private async getWeatherDataByCoordinates(longitude: string, latitude: string): Promise<Object>{

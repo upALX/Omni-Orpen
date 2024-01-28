@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { WeatherController } from './weather.controller';
+import { WeatherController } from './controller/weather.controller';
 import { WeatherResource } from './weather.resource';
-import { WeatherRepository } from './weather.repository';
+import { WebhookRepository } from './repository/webhook.repository';
+import { WeatherRepository } from './repository/weather.repository';
 import { WeatherModel } from './model/weather.model';
-import { WebhooksModel } from './model/webhooks.model';
+import { WebhookModel } from './model/webhook.model';
+import { WebhookController } from './controller/webhook.controller';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([WeatherModel, WebhooksModel])],
+    imports: [TypeOrmModule.forFeature([WeatherModel, WebhookModel])],
     controllers: [WeatherResource],
-    providers: [WeatherModel, WebhooksModel, WeatherController, WeatherRepository],
+    providers: [WeatherModel, WebhookModel, WeatherController, WebhookController, WeatherRepository, WebhookRepository],
 })
 export class WeatherModule {}
