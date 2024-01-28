@@ -87,7 +87,7 @@ export class WeatherController {
       console.log(`The weather data from coordinates is ${weatherDataResponse}`)
 
     }catch(errorCaught){
-        if (weatherDataResponse.status == 404){
+        if (weatherDataResponse.length <= 0){
           throw new HttpException({
             status: HttpStatus.NOT_FOUND,
             error: `The weather for CITY and COUNTRY information was not found. Confirm if you are using the country codes ISO 3166`,
@@ -132,14 +132,7 @@ export class WeatherController {
       console.log(`The captured coordinates are: ${coordinates} `)
 
     }catch(errorCaught){
-      if (coordinatesDataResponse.status == 404){
-        throw new HttpException({
-          status: HttpStatus.NOT_FOUND,
-          error: `The result with this parameters ${city} and ${country} was not found. Confirm if you are using the country codes ISO 3166.`,
-        }, HttpStatus.NOT_FOUND,{
-            cause: errorCaught
-        });
-      }if(coordinatesDataResponse.length <= 0){
+      if(coordinatesDataResponse.length <= 0){
         throw new HttpException({
           status: HttpStatus.NOT_FOUND,
           error: `The country ${country} and city ${city} provided do not have information about your location`,
@@ -155,7 +148,6 @@ export class WeatherController {
         });
       }
     }
-
     return coordinates
   }
 }

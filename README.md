@@ -63,7 +63,7 @@ docker-compose up
 - Click to save connection.
 
 **6 - Access the databases of Orpen-Weather:**
-- Into OrpenWeatherDB tab right click
+- Into ```weather_app``` tab right click
 - Click in CREATE script;
 - Into page of scripts, put the SQL script below and run:
     ```

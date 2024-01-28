@@ -10,10 +10,10 @@ export class WebhookModel{
     @Generated('uuid')
     webhookKey: string;
 
-    @Column({name: 'city', length: 70, nullable: false})
+    @Column({name: 'city', length: 21, nullable: false})
     city: string;
     
-    @Column({name: 'country', length: 100, nullable: false})
+    @Column({name: 'country', length: 2, nullable: false})
     country: string;
 
     @Column({name: 'webhook_url', length: 700, nullable: false})
