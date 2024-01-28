@@ -23,29 +23,24 @@ export class WeatherController {
 
   public async getAllDataWeather(country: string, city: string): Promise<Object>{
 
-    //Verify if the country and city are registry to receive webhook
+    const coordinatesDataObject = await this.getCoordinatesByCountryCity(city, country);
 
-    //get cordinate by location
-    const coordinatesDataByLocationName = await this.getCoordinatesByCountryCity(city, country);
+    console.log(`The coordinates are: ${coordinatesDataObject}`)
 
-    console.log(`The coordinates are: ${coordinatesDataByLocationName}`)
-
-    //get all weather data by coordinate
-    const weatherData = await this.getWeatherDataByCoordinates(coordinatesDataByLocationName.longitude, coordinatesDataByLocationName.latitude);
+    const weatherData = await this.getWeatherDataByCoordinates(coordinatesDataObject.longitude, coordinatesDataObject.latitude);
 
     console.log(`The weather DATA are: ${weatherData}`)
     
-    //save the data on database
     const weatherModel = await this.weatherRepository.saveWeatherData(city, country, weatherData);
 
-    const subscriptionsToReceiveWebhookArray = await this.webhookController.getRequestSubscriptionsWebhook(
+    const arraySubscriptionsToReceiveWebhook = await this.webhookController.getRequestSubscriptionsWebhook(
       country, city
     );
 
-    if(subscriptionsToReceiveWebhookArray.length > 0){
+    if(arraySubscriptionsToReceiveWebhook.length > 0){
 
       //Send only successful requests because the devs need the information when a location was consulted, not when a request is made
-      this.webhookController.sentWebhooks(subscriptionsToReceiveWebhookArray, weatherModel)
+      this.webhookController.sentWebhooks(arraySubscriptionsToReceiveWebhook, weatherModel)
     }
 
     console.log(`The weather model was saved and has the key: ${weatherModel.weather_key}`)
@@ -54,7 +49,6 @@ export class WeatherController {
 
     console.log(`The DTO created: ${weatherResponseDTO}`)
 
-    //return the data
     return weatherResponseDTO
   }
 
@@ -93,7 +87,6 @@ export class WeatherController {
       console.log(`The weather data from coordinates is ${weatherDataResponse}`)
 
     }catch(errorCaught){
-      {
         if (weatherDataResponse.status == 404){
           throw new HttpException({
             status: HttpStatus.NOT_FOUND,
@@ -109,7 +102,6 @@ export class WeatherController {
               cause: errorCaught
           });
         }
-      }
     };
 
     return weatherDataResponse
@@ -137,7 +129,7 @@ export class WeatherController {
         longitude: locationCoordinates.lon,
       }
 
-      console.log(`The coordinates getted are: ${coordinates} `)
+      console.log(`The captured coordinates are: ${coordinates} `)
 
     }catch(errorCaught){
       if (coordinatesDataResponse.status == 404){
@@ -147,7 +139,7 @@ export class WeatherController {
         }, HttpStatus.NOT_FOUND,{
             cause: errorCaught
         });
-      }else if(coordinatesDataResponse.length <= 0){
+      }if(coordinatesDataResponse.length <= 0){
         throw new HttpException({
           status: HttpStatus.NOT_FOUND,
           error: `The country ${country} and city ${city} provided do not have information about your location`,

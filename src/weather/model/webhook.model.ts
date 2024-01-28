@@ -8,7 +8,7 @@ export class WebhookModel{
 
     @Column({name: 'webhook_key', nullable: false})
     @Generated('uuid')
-    webhook_key: string;
+    webhookKey: string;
 
     @Column({name: 'city', length: 70, nullable: false})
     city: string;

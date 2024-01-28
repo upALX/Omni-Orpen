@@ -69,32 +69,33 @@ docker-compose up
     ```
     CREATE TABLE IF NOT EXISTS "Weather" (
     id SERIAL PRIMARY KEY,
-    weather_key VARCHAR(36) NOT NULL,
-    city VARCHAR(70) NOT NULL,
-    country VARCHAR(100) NOT NULL,
+    weather_key UUID NOT NULL,
+    city VARCHAR(21) NOT NULL,
+    country VARCHAR(2) NOT NULL,
     weather_data JSONB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
     CREATE TABLE IF NOT EXISTS "Webhooks" (
     id SERIAL PRIMARY KEY,
-		webhook_key UUID NOT NULL
-    city VARCHAR(50) NOT NULL,
-    country VARCHAR(70) NOT NULL,
+		webhook_key UUID NOT NULL,
+    city VARCHAR(21) NOT NULL,
+    country VARCHAR(2) NOT NULL,
     webhook_url VARCHAR(700) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     );
     ```
-**7 - Now, on IDE-terminal in root folder rebuild the db:**
-```
-docker-compose up --build
-```
-*after that run the application in the terminal*
+**7 - After that run the application in the terminal**
 ```
 npm run start
 ```
 
+*If any problem with connection db, on IDE-terminal in root folder rebuild the db:*
+```
+docker-compose up --build
+```
+
 ---
-*To access all features of this API, click [here]() and learn how to use with the docs.*
+*To access all features of this API, click [here](https://upalx.notion.site/OrpenWeather-Docs-9cf62cf2bae7455f97cb5343090c0138?pvs=4) and learn how to use with the docs.*
 
 ## Make your mark :triangular_flag_on_post:   
 

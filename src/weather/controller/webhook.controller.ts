@@ -15,7 +15,7 @@ export class WebhookController{
         const weatherWebhookModel = await this.webhookRepository.saveWeatherWebhook(city, country, webhookURL)
     
         const weatherWebhookDTO = new WebhookRegistryResponseDTO(
-          weatherWebhookModel.webhook_key, 
+          weatherWebhookModel.webhookKey, 
           weatherWebhookModel.webhookURL
         )
         
@@ -24,14 +24,13 @@ export class WebhookController{
 
       public async getRequestSubscriptionsWebhook(country: string, city: string) {
         
-        const subscriptionsWebhookModels = await this.webhookRepository.findAllSubscriptionsWebhookByParams(
+        const arraySubscriptionsWebhookModels = await this.webhookRepository.findAllSubscriptionsWebhookByParams(
           country, city
         ) 
 
-        console.log(`Webhook models finded are: ${subscriptionsWebhookModels}`)
+        console.log(`Webhook models found are: ${arraySubscriptionsWebhookModels}`)
 
-        return subscriptionsWebhookModels
-
+        return arraySubscriptionsWebhookModels
       }
 
       public async sentWebhooks(webhookModels: Array<WebhookModel>, weatherModel: WeatherModel){
