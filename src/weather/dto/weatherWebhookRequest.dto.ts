@@ -1,4 +1,4 @@
-export class WeatherRequestDTO{
+export class WeatherWebhookRequestDTO{
     constructor(
         readonly request_key: string,
         readonly request_datetime: string, 

@@ -1,10 +1,9 @@
 import { WebhookRepository } from "../repository/webhook.repository";
-import { WebhookResponseDTO } from '../dto/webhookResponse.dto';
+import { WebhookRegistryResponseDTO } from '../dto/webhookRegistryResponse.dto';
 import { Injectable } from "@nestjs/common";
 import { WeatherModel } from "../model/weather.model";
 import { WebhookModel } from "../model/webhook.model";
-import { HistoryWeatherResponseDTO } from "../dto/historyWeatherResponse.dto";
-import { WeatherRequestDTO } from "../dto/weatherRequest.dto";
+import { WeatherWebhookRequestDTO } from "../dto/weatherWebhookRequest.dto";
 
 @Injectable()
 export class WebhookController{
@@ -15,7 +14,7 @@ export class WebhookController{
     public async registryWeatherWebhook(city: string, country: string, webhookURL: string){
         const weatherWebhookModel = await this.webhookRepository.saveWeatherWebhook(city, country, webhookURL)
     
-        const weatherWebhookDTO = new WebhookResponseDTO(
+        const weatherWebhookDTO = new WebhookRegistryResponseDTO(
           weatherWebhookModel.webhook_key, 
           weatherWebhookModel.webhookURL
         )
@@ -36,7 +35,7 @@ export class WebhookController{
       }
 
       public async sentWebhooks(webhookModels: Array<WebhookModel>, weatherModel: WeatherModel){
-          let requestDTO = new WeatherRequestDTO(
+          let requestDTO = new WeatherWebhookRequestDTO(
             weatherModel.weather_key,
             weatherModel.createdAt,
             weatherModel.weatherData

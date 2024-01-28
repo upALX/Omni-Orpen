@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { WeatherRepository } from '../repository/weather.repository';
 import { ConfigService } from '@nestjs/config';
-import { WeatherResponseDTO } from '../dto/weatherResponse.dto';
-import { HistoryWeatherResponseDTO } from '../dto/historyWeatherResponse.dto';
+import { WeatherDataResponseDTO } from '../dto/weatherDataResponse.dto';
+import { WeatherHistoryResponseDTO } from '../dto/weatherHistoryResponse.dto';
 import { WebhookController } from './webhook.controller';
 
 @Injectable()
@@ -50,7 +50,7 @@ export class WeatherController {
 
     console.log(`The weather model was saved and has the key: ${weatherModel.weather_key}`)
 
-    const weatherResponseDTO = new WeatherResponseDTO(weatherModel.weather_key, weatherModel.weatherData);
+    const weatherResponseDTO = new WeatherDataResponseDTO(weatherModel.weather_key, weatherModel.weatherData);
 
     console.log(`The DTO created: ${weatherResponseDTO}`)
 
@@ -63,7 +63,7 @@ export class WeatherController {
     const allWeatherData = await this.weatherRepository.getAllDataRequests()
 
     const allWeatherDataDTO = allWeatherData.map(
-      (weatherModel) => new HistoryWeatherResponseDTO(
+      (weatherModel) => new WeatherHistoryResponseDTO(
           weatherModel.city,
           weatherModel.country,
           weatherModel.createdAt,

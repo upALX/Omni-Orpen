@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-export class WeatherWebhookRegistryDTO{
+export class WebhookRegistryRequestDTO{
 
     @IsString()
     @IsNotEmpty()

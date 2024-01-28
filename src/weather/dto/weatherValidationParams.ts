@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, Length } from "class-validator";
 
 
-export class QueryValidationParamsDTO{
+export class weatherValidationParamsDTO{
 
     @IsString()
     @IsNotEmpty()
