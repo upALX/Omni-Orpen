@@ -27,7 +27,7 @@ export class WeatherController {
     console.log(`The coordinates are: ${coordinatesDataByLocationName}`)
 
     //get all weather data by coordinate
-    const weatherData = await this.getWeatherDataByCoordinates(coordinatesDataByLocationName.longitude, coordinatesDataByLocationName.longitude);
+    const weatherData = await this.getWeatherDataByCoordinates(coordinatesDataByLocationName.longitude, coordinatesDataByLocationName.latitude);
 
     console.log(`The weather DATA are: ${weatherData}`)
     
@@ -75,10 +75,12 @@ export class WeatherController {
     let weatherByCoordinatesURL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${this.apiKey}`;
 
     try{
+
       var weatherDataResponse = await fetch(weatherByCoordinatesURL)
       .then(
         (response) => {
           if(!response.ok){
+
             throw new Error(`Failed to fetch data on DATA BY COORDINATES. Status: ${response.status}`);
           }
           return response.json()
@@ -99,7 +101,7 @@ export class WeatherController {
         }else{
           throw new HttpException({
             status: HttpStatus.INTERNAL_SERVER_ERROR,
-            error: `We found an internal error and we are fixing it`,
+            error: `We found an internal error and we are fixing it.`,
           }, HttpStatus.INTERNAL_SERVER_ERROR,{
               cause: errorCaught
           });
@@ -145,7 +147,7 @@ export class WeatherController {
       }else if(coordinatesDataResponse.length <= 0){
         throw new HttpException({
           status: HttpStatus.NOT_FOUND,
-          error: `The country ${country} and ${city} provided do not have information about your location`,
+          error: `The country ${country} and city ${city} provided do not have information about your location`,
         }, HttpStatus.NOT_FOUND,{
             cause: errorCaught
         });
