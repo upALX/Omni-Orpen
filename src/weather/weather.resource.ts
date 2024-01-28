@@ -1,6 +1,7 @@
-import { Controller, Get, Query, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, ValidationPipe } from '@nestjs/common';
 import { WeatherController } from './weather.controller';
 import { QueryValidationParamsDTO } from './dto/queryValidationParams.dto';
+import { WeatherWebhookRegistryDTO } from './dto/weatherWebhookRegistry.dto';
 
 @Controller('/weather')
 export class WeatherResource {
@@ -24,8 +25,19 @@ export class WeatherResource {
 
   @Get('/history')
   public async getHistoryRequests(){
-    const weatherResponseDTO = await this.weatherController.getAllDataWeatherResquest()
+    const weatherResponseDTO = await this.weatherController.getAllDataWeatherRequest()
 
     return JSON.stringify(weatherResponseDTO)
+  }
+
+  @Post('/registry/webhooks')
+  public async postRegistryWebhooks(@Body() req: WeatherWebhookRegistryDTO){
+
+    const {city, country, webhookURL} = req;
+
+    const weatherWebhookDTO = await this.weatherController.registryWeatherWebhook(city, country, webhookURL)
+
+    return JSON.stringify(weatherWebhookDTO)
+
   }
 }
