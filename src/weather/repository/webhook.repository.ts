@@ -22,6 +22,21 @@ export class WebhookRepository {
       return model
     }
 
+    public async findWebhookModelByGenerics(
+      city: string, 
+      country: string, 
+      webhookURL: string){
+
+        console.log(`This is the city property ${city} and it type is ${typeof city}`)
+        const model = await this.webhookRepository.find({
+          where: {
+            city, 
+            country, 
+            webhookURL}});
+
+        return model
+    }
+
     public async findAllSubscriptionsWebhookByParams(targetCountry: string, targetCity: string){
 
       console.log(`ON REPOSITORY TO GET ALL SUBSCRIPTIONS MODELS WEBHOOK where the country is ${targetCountry} and city is ${targetCity}`)

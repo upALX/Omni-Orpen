@@ -1,6 +1,6 @@
 import { WebhookRepository } from "../repository/webhook.repository";
 import { WebhookRegistryResponseDTO } from '../dto/webhookRegistryResponse.dto';
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { WeatherModel } from "../model/weather.model";
 import { WebhookModel } from "../model/webhook.model";
 import { WeatherWebhookRequestDTO } from "../dto/weatherWebhookRequest.dto";
@@ -12,6 +12,17 @@ export class WebhookController{
     ){}
 
     public async registryWeatherWebhook(city: string, country: string, webhookURL: string){
+        const webhookListModel = await this.webhookRepository.findWebhookModelByGenerics(
+          city, country, webhookURL
+        )
+
+        if( webhookListModel.length > 0){
+          throw new HttpException({
+          status: HttpStatus.BAD_REQUEST,
+          error: `On database already exists a subscription with the url ${webhookURL} and ${city} + ${country}.`,
+        }, HttpStatus.BAD_REQUEST);
+        }
+
         const weatherWebhookModel = await this.webhookRepository.saveWeatherWebhook(city, country, webhookURL)
     
         const weatherWebhookDTO = new WebhookRegistryResponseDTO(
