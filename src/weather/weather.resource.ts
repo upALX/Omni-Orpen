@@ -13,12 +13,13 @@ export class WeatherResource {
     return JSON.stringify(this.weatherController.getHello());
   }
 
-  //TODO verify why the params are not in the rules
   @Get('/data')
   public async getWeatherData(@Query(new ValidationPipe({transform: true}))params: weatherValidationParamsDTO){
 
-    const country = params.country
-    const city = params.city
+    const country = params.country.replace(/[^\w\s]/g, '').toLowerCase().trim();
+    const city = params.city.replace(/[^\w\s]/g, '').toLowerCase();
+
+    console.log(country, city)
 
     const weatherResponseDTO = await this.weatherController.getAllDataWeather(
       country, city
@@ -39,7 +40,7 @@ export class WeatherResource {
 
     const {city, country, webhook_url} = req;
 
-    const weatherWebhookDTO = await this.webhookController.registryWeatherWebhook(city, country, webhook_url)
+    const weatherWebhookDTO = await this.webhookController.registryWeatherWebhook(city.toLowerCase().trim(), country.toLowerCase().trim(), webhook_url.trim())
 
     return JSON.stringify(weatherWebhookDTO)
   }

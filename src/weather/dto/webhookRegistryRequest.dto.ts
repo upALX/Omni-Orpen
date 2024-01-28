@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsUrl } from "class-validator";
+import { IsNotEmpty, IsString, IsUrl, Length } from "class-validator";
 
 export class WebhookRegistryRequestDTO{
 
@@ -8,6 +8,7 @@ export class WebhookRegistryRequestDTO{
 
     @IsString()
     @IsNotEmpty()
+    @Length(2, 2)
     country: string;
 
     @IsString()
