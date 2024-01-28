@@ -17,8 +17,11 @@ export class WeatherResource {
   @Get('/data')
   public async getWeatherData(@Query(new ValidationPipe({transform: true}))params: QueryValidationParamsDTO){
 
+    const country = params.country
+    const city = params.city
+
     const weatherResponseDTO = await this.weatherController.getAllDataWeather(
-      params.country, params.city
+      country, city
     )
 
     return JSON.stringify(weatherResponseDTO)
@@ -31,7 +34,7 @@ export class WeatherResource {
     return JSON.stringify(weatherResponseDTO)
   }
 
-  @Post('/registry/webhook')
+  @Post('/subscription/webhook')
   public async postRegistryWebhooks(@Body() req: WeatherWebhookRegistryDTO){
 
     const {city, country, webhookURL} = req;

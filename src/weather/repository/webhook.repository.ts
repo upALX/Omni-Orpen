@@ -21,4 +21,22 @@ export class WebhookRepository {
 
       return model
     }
+
+    public async findAllSubscriptionsWebhookByParams(targetCountry: string, targetCity: string){
+
+      console.log(`ON REPOSITORY TO GET ALL SUBSCRIPTIONS MODELS WEBHOOK where the country is ${targetCountry} and city is ${targetCity}`)
+      const allSubscriptionsModels = await this.webhookRepository.find(
+        {
+          where: {
+            country: targetCountry,
+            city: targetCity
+          }
+        }
+      );
+
+      console.log(`All URLS finded on REPOSITORY: ${JSON.stringify(allSubscriptionsModels)}`)
+
+      return allSubscriptionsModels
+
+    }
 }

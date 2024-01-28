@@ -3,12 +3,17 @@ import { WeatherRepository } from '../repository/weather.repository';
 import { ConfigService } from '@nestjs/config';
 import { WeatherResponseDTO } from '../dto/weatherResponse.dto';
 import { HistoryWeatherResponseDTO } from '../dto/historyWeatherResponse.dto';
+import { WebhookController } from './webhook.controller';
 
 @Injectable()
 export class WeatherController {
   private apiKey = ''
 
-  constructor(private readonly configService: ConfigService, private weatherRepository: WeatherRepository) {
+  constructor(
+    private readonly configService: ConfigService, 
+    private weatherRepository: WeatherRepository,
+    private webhookController: WebhookController
+    ) {
     this.apiKey = this.configService.get<string>('API_KEY')
   }
 
@@ -33,6 +38,15 @@ export class WeatherController {
     //save the data on database
     const weatherModel = await this.weatherRepository.saveWeatherData(city, country, weatherData);
 
+    const subscriptionsToReceiveWebhookArray = await this.webhookController.getRequestSubscriptionsWebhook(
+      country, city
+    );
+
+    if(subscriptionsToReceiveWebhookArray.length > 0){
+
+      //Send only successful requests because the devs need the information when a location was consulted, not when a request is made
+      this.webhookController.sentWebhooks(subscriptionsToReceiveWebhookArray, weatherModel)
+    }
 
     console.log(`The weather model was saved and has the key: ${weatherModel.weather_key}`)
 
@@ -55,7 +69,7 @@ export class WeatherController {
           weatherModel.createdAt,
           weatherModel.weatherData
         ) 
-    ) 
+    );
 
     return allWeatherDataDTO
   }
