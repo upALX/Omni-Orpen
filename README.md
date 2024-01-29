@@ -22,6 +22,7 @@ This is an rest api that consult weather data without the need for identificatio
 **requirements:**
   - Docker >= 24.0.7
   - Docker compose >= 1.29.2
+  - Node >= 18.17.1
 
 **1 - Clone this repo:**
 ```
@@ -50,52 +51,56 @@ docker-compose up
 ```
 
 **5 - Access page admin of postgres on host: ```http://localhost:8081``` and create a server to db:**
-- Log in using your email and password in the docker-compose.yml file for the pgadmin service.
+- Log in using as username: *DB_ADMIN_EMAIL* value and as password: *DB_PASSWORD* value in the ```.env``` file.
 - On Dashboard, click in 'Add New Server';
-- In 'General', add a Name to the server of your choice;
-- In 'Connection', fil 
+- In 'General', add a Name of your choice to the server;
 - In the Connection tab, fill in the following details:
     - Host name/address: postgres
     - Port: 5432
     - Maintenance database: postgres
-    - Username: alx (same value username of ```.env``` file);
-    - Password: alxroot (same value password of ```.env``` file)
+    - Username: alx (same value *DB_USERNAME* of ```.env``` file);
+    - Password: alxroot (same value *DB_PASSWORD* of ```.env``` file)
 - Click to save connection.
 
-**6 - Access the databases of Orpen-Weather:**
-- Into ```weather_app``` tab right click
+**6 - Access the databases of orpen_weather_db:**
+- Into Servers > name that you choice to the server > Databases > ```orpen_weather_db``` tab right click;
 - Click in CREATE script;
-- Into page of scripts, put the SQL script below and run:
+- Into page of scripts, put the SQL script below and run (F5):
     ```
-    CREATE TABLE IF NOT EXISTS "Weather" (
+    CREATE TABLE IF NOT EXISTS "weather" (
     id SERIAL PRIMARY KEY,
     weather_key UUID NOT NULL,
-    city VARCHAR(21) NOT NULL,
+    city VARCHAR(85) NOT NULL,
     country VARCHAR(2) NOT NULL,
     weather_data JSONB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
-    CREATE TABLE IF NOT EXISTS "Webhooks" (
+    CREATE TABLE IF NOT EXISTS "webhooks" (
     id SERIAL PRIMARY KEY,
 		webhook_key UUID NOT NULL,
-    city VARCHAR(21) NOT NULL,
+    city VARCHAR(85) NOT NULL,
     country VARCHAR(2) NOT NULL,
     webhook_url VARCHAR(700) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
+    
     ```
+
+    *Verify into Schemas > Tables if the tables ```weather``` and ```webhooks``` was created*
+
 **7 - After that run the application in the terminal**
 ```
 npm run start
 ```
+**Now, the API is running 🚀**
 
-*If any problem with connection db, on IDE-terminal in root folder rebuild the db:*
+*If any problem with connection db, on IDE-terminal in root folder restart the containers*
 ```
-docker-compose up --build
+docker restart $(docker ps -q)
 ```
 
 ---
-*To access all features of this API, click [here](https://upalx.notion.site/OrpenWeather-Docs-9cf62cf2bae7455f97cb5343090c0138?pvs=4) and learn how to use with the docs.*
+*To access all features of this API, click [here](https://upalx.notion.site/OrpenWeather-Docs-9cf62cf2bae7455f97cb5343090c0138?pvs=4) and learn how to use with the Orpen Weather DOCS.*
 
 ## Make your mark :triangular_flag_on_post:   
 

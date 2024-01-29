@@ -1,4 +1,3 @@
-import { Injectable } from "@nestjs/common";
 import { Column, CreateDateColumn, Entity, Generated, PrimaryGeneratedColumn} from "typeorm";
 
 @Entity({name: 'weather'})
