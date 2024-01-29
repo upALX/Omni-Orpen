@@ -2,7 +2,7 @@
 
 **Overview**
 
-This is an rest api that consult weather data without the need for identification by the user.
+This is an rest api that consult weather data without the need for identification by the user. **After run the app, you can learn about the features and endpoints on [Orpen Weather DOCS](https://upalx.notion.site/OrpenWeather-Docs-9cf62cf2bae7455f97cb5343090c0138)**.
 
 🎆*This project is on MVP*🎇
 
@@ -66,10 +66,10 @@ docker-compose up
     - Password: alxroot (same value *DB_PASSWORD* of ```.env``` file)
 - Click to save connection.
 
-**6 - Access the databases of orpen_weather_db:**
-- Into Servers > name that you choice to the server > Databases > ```orpen_weather_db``` tab right click;
+**6 - Access the databases and create the tables**
+- Into Servers > name you chose for the server > Databases > In ```orpen_weather_db``` tab right click;
 - Click in CREATE script;
-- Into page of scripts, put the SQL script below and run (F5):
+- Into page of scripts, remove all the SQL there and put the SQL script below, after that run(F5):
     ```
     CREATE TABLE IF NOT EXISTS "weather" (
 	id SERIAL PRIMARY KEY,
@@ -92,19 +92,19 @@ docker-compose up
 
     *Verify into Schemas > Tables if the tables ```weather``` and ```webhooks``` was created*
 
-**7 - After that run the application in the terminal**
+**7 - After that run the application on your IDE-terminal:**
 ```
 npm run start
 ```
 **Now, the API is running 🚀**
 
-*If any problem with connection db, on IDE-terminal in root folder restart the containers*
+*If you have any problem with connection db, on IDE-terminal in root folder restart the containers with this command:*
 ```
 docker restart $(docker ps -q)
 ```
 
 ---
-*To access all features of this API, click [here](https://upalx.notion.site/OrpenWeather-Docs-9cf62cf2bae7455f97cb5343090c0138?pvs=4) and learn how to use with the Orpen Weather DOCS.*
+*To access all features of this API, click [here](https://upalx.notion.site/OrpenWeather-Docs-9cf62cf2bae7455f97cb5343090c0138?pvs=4) and learn how to use with the [Orpen Weather DOCS](https://upalx.notion.site/OrpenWeather-Docs-9cf62cf2bae7455f97cb5343090c0138?pvs=4).*
 
 ## Make your mark :triangular_flag_on_post:   
 
