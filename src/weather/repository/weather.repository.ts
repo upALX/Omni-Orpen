@@ -12,6 +12,9 @@ export class WeatherRepository {
   ) {}
 
     public async saveWeatherData(city: string, country: string, weatherData: Object){
+
+      this.weatherModelDB = new WeatherModel()
+
       this.weatherModelDB.city = city
       this.weatherModelDB.country = country
       this.weatherModelDB.weatherData = weatherData
@@ -26,5 +29,4 @@ export class WeatherRepository {
 
       return model
     }
-
 }
