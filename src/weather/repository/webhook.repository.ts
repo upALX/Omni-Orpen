@@ -13,6 +13,9 @@ export class WebhookRepository {
   ) {}
 
     public async saveWeatherWebhook(city: string, country: string, webhookURL: string){
+
+      this.webhookModelDB = new WebhookModel()
+      
       this.webhookModelDB.city = city
       this.webhookModelDB.country = country
       this.webhookModelDB.webhookURL = webhookURL
