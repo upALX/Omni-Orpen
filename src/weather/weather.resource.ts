@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, ValidationPipe } from '@nestjs/common';
 import { WeatherController } from './controller/weather.controller';
-import { QueryValidationParamsDTO } from './dto/queryValidationParams.dto';
-import { WeatherWebhookRegistryDTO } from './dto/weatherWebhookRegistry.dto';
+import { weatherValidationParamsDTO } from './dto/weatherValidationParams';
+import { WebhookRegistryRequestDTO } from './dto/webhookRegistryRequest.dto';
 import { WebhookController } from './controller/webhook.controller';
 
 @Controller('/weather')
@@ -13,12 +13,13 @@ export class WeatherResource {
     return JSON.stringify(this.weatherController.getHello());
   }
 
-  //TODO verify why the params are not in the rules
   @Get('/data')
-  public async getWeatherData(@Query(new ValidationPipe({transform: true}))params: QueryValidationParamsDTO){
+  public async getWeatherData(@Query(new ValidationPipe({transform: true}))params: weatherValidationParamsDTO){
 
-    const country = params.country
-    const city = params.city
+    const country = params.country.replace(/[^\w\s]/g, '').toLowerCase().trim();
+    const city = params.city.replace(/[^\w\s]/g, '').toLowerCase();
+
+    console.log(country, city)
 
     const weatherResponseDTO = await this.weatherController.getAllDataWeather(
       country, city
@@ -35,11 +36,11 @@ export class WeatherResource {
   }
 
   @Post('/subscription/webhook')
-  public async postRegistryWebhooks(@Body() req: WeatherWebhookRegistryDTO){
+  public async postRegistryWebhooks(@Body() req: WebhookRegistryRequestDTO){
 
-    const {city, country, webhookURL} = req;
+    const {city, country, webhook_url} = req;
 
-    const weatherWebhookDTO = await this.webhookController.registryWeatherWebhook(city, country, webhookURL)
+    const weatherWebhookDTO = await this.webhookController.registryWeatherWebhook(city.toLowerCase().trim(), country.toLowerCase().trim(), webhook_url.trim())
 
     return JSON.stringify(weatherWebhookDTO)
   }

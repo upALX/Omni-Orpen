@@ -1,10 +1,9 @@
 import { WebhookRepository } from "../repository/webhook.repository";
-import { WebhookResponseDTO } from '../dto/webhookResponse.dto';
-import { Injectable } from "@nestjs/common";
+import { WebhookRegistryResponseDTO } from '../dto/webhookRegistryResponse.dto';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { WeatherModel } from "../model/weather.model";
 import { WebhookModel } from "../model/webhook.model";
-import { HistoryWeatherResponseDTO } from "../dto/historyWeatherResponse.dto";
-import { WeatherRequestDTO } from "../dto/weatherRequest.dto";
+import { WeatherWebhookRequestDTO } from "../dto/weatherWebhookRequest.dto";
 
 @Injectable()
 export class WebhookController{
@@ -13,10 +12,21 @@ export class WebhookController{
     ){}
 
     public async registryWeatherWebhook(city: string, country: string, webhookURL: string){
+        const webhookListModel = await this.webhookRepository.findWebhookModelByGenerics(
+          city, country, webhookURL
+        )
+
+        if( webhookListModel.length > 0){
+          throw new HttpException({
+          status: HttpStatus.BAD_REQUEST,
+          error: `On database already exists a subscription with the url ${webhookURL} and ${city} + ${country}.`,
+        }, HttpStatus.BAD_REQUEST);
+        }
+
         const weatherWebhookModel = await this.webhookRepository.saveWeatherWebhook(city, country, webhookURL)
     
-        const weatherWebhookDTO = new WebhookResponseDTO(
-          weatherWebhookModel.webhook_key, 
+        const weatherWebhookDTO = new WebhookRegistryResponseDTO(
+          weatherWebhookModel.webhookKey, 
           weatherWebhookModel.webhookURL
         )
         
@@ -25,18 +35,17 @@ export class WebhookController{
 
       public async getRequestSubscriptionsWebhook(country: string, city: string) {
         
-        const subscriptionsWebhookModels = await this.webhookRepository.findAllSubscriptionsWebhookByParams(
+        const arraySubscriptionsWebhookModels = await this.webhookRepository.findAllSubscriptionsWebhookByParams(
           country, city
         ) 
 
-        console.log(`Webhook models finded are: ${subscriptionsWebhookModels}`)
+        console.log(`Webhook models found are: ${arraySubscriptionsWebhookModels}`)
 
-        return subscriptionsWebhookModels
-
+        return arraySubscriptionsWebhookModels
       }
 
       public async sentWebhooks(webhookModels: Array<WebhookModel>, weatherModel: WeatherModel){
-          let requestDTO = new WeatherRequestDTO(
+          let requestDTO = new WeatherWebhookRequestDTO(
             weatherModel.weather_key,
             weatherModel.createdAt,
             weatherModel.weatherData

@@ -1,4 +1,3 @@
-import { Injectable } from "@nestjs/common";
 import { Column, CreateDateColumn, Entity, Generated, PrimaryGeneratedColumn} from "typeorm";
 
 @Entity({name: 'weather'})
@@ -11,10 +10,10 @@ export class WeatherModel{
     @Generated('uuid')
     weather_key: string
 
-    @Column({name: 'city', length: 70, nullable: false})
+    @Column({name: 'city', length: 21, nullable: false})
     city: string;
 
-    @Column({name: 'country', length: 100, nullable: false})
+    @Column({name: 'country', length: 2, nullable: false})
     country: string;
 
     @Column({name: 'weather_data', type: 'simple-json', nullable: true })

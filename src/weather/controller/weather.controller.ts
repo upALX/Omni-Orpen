@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { WeatherRepository } from '../repository/weather.repository';
 import { ConfigService } from '@nestjs/config';
-import { WeatherResponseDTO } from '../dto/weatherResponse.dto';
-import { HistoryWeatherResponseDTO } from '../dto/historyWeatherResponse.dto';
+import { WeatherDataResponseDTO } from '../dto/weatherDataResponse.dto';
+import { WeatherHistoryResponseDTO } from '../dto/weatherHistoryResponse.dto';
 import { WebhookController } from './webhook.controller';
 
 @Injectable()
@@ -23,38 +23,32 @@ export class WeatherController {
 
   public async getAllDataWeather(country: string, city: string): Promise<Object>{
 
-    //Verify if the country and city are registry to receive webhook
+    const coordinatesDataObject = await this.getCoordinatesByCountryCity(city, country);
 
-    //get cordinate by location
-    const coordinatesDataByLocationName = await this.getCoordinatesByCountryCity(city, country);
+    console.log(`The coordinates are: ${coordinatesDataObject}`)
 
-    console.log(`The coordinates are: ${coordinatesDataByLocationName}`)
-
-    //get all weather data by coordinate
-    const weatherData = await this.getWeatherDataByCoordinates(coordinatesDataByLocationName.longitude, coordinatesDataByLocationName.latitude);
+    const weatherData = await this.getWeatherDataByCoordinates(coordinatesDataObject.longitude, coordinatesDataObject.latitude);
 
     console.log(`The weather DATA are: ${weatherData}`)
     
-    //save the data on database
     const weatherModel = await this.weatherRepository.saveWeatherData(city, country, weatherData);
 
-    const subscriptionsToReceiveWebhookArray = await this.webhookController.getRequestSubscriptionsWebhook(
+    const arraySubscriptionsToReceiveWebhook = await this.webhookController.getRequestSubscriptionsWebhook(
       country, city
     );
 
-    if(subscriptionsToReceiveWebhookArray.length > 0){
+    if(arraySubscriptionsToReceiveWebhook.length > 0){
 
       //Send only successful requests because the devs need the information when a location was consulted, not when a request is made
-      this.webhookController.sentWebhooks(subscriptionsToReceiveWebhookArray, weatherModel)
+      this.webhookController.sentWebhooks(arraySubscriptionsToReceiveWebhook, weatherModel)
     }
 
     console.log(`The weather model was saved and has the key: ${weatherModel.weather_key}`)
 
-    const weatherResponseDTO = new WeatherResponseDTO(weatherModel.weather_key, weatherModel.weatherData);
+    const weatherResponseDTO = new WeatherDataResponseDTO(weatherModel.weather_key, weatherModel.weatherData);
 
     console.log(`The DTO created: ${weatherResponseDTO}`)
 
-    //return the data
     return weatherResponseDTO
   }
 
@@ -63,7 +57,7 @@ export class WeatherController {
     const allWeatherData = await this.weatherRepository.getAllDataRequests()
 
     const allWeatherDataDTO = allWeatherData.map(
-      (weatherModel) => new HistoryWeatherResponseDTO(
+      (weatherModel) => new WeatherHistoryResponseDTO(
           weatherModel.city,
           weatherModel.country,
           weatherModel.createdAt,
@@ -93,8 +87,7 @@ export class WeatherController {
       console.log(`The weather data from coordinates is ${weatherDataResponse}`)
 
     }catch(errorCaught){
-      {
-        if (weatherDataResponse.status == 404){
+        if (weatherDataResponse.length <= 0){
           throw new HttpException({
             status: HttpStatus.NOT_FOUND,
             error: `The weather for CITY and COUNTRY information was not found. Confirm if you are using the country codes ISO 3166`,
@@ -109,7 +102,6 @@ export class WeatherController {
               cause: errorCaught
           });
         }
-      }
     };
 
     return weatherDataResponse
@@ -137,17 +129,10 @@ export class WeatherController {
         longitude: locationCoordinates.lon,
       }
 
-      console.log(`The coordinates getted are: ${coordinates} `)
+      console.log(`The captured coordinates are: ${coordinates} `)
 
     }catch(errorCaught){
-      if (coordinatesDataResponse.status == 404){
-        throw new HttpException({
-          status: HttpStatus.NOT_FOUND,
-          error: `The result with this parameters ${city} and ${country} was not found. Confirm if you are using the country codes ISO 3166.`,
-        }, HttpStatus.NOT_FOUND,{
-            cause: errorCaught
-        });
-      }else if(coordinatesDataResponse.length <= 0){
+      if(coordinatesDataResponse.length <= 0){
         throw new HttpException({
           status: HttpStatus.NOT_FOUND,
           error: `The country ${country} and city ${city} provided do not have information about your location`,
@@ -163,7 +148,6 @@ export class WeatherController {
         });
       }
     }
-
     return coordinates
   }
 }
