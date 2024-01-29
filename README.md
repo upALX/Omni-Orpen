@@ -46,6 +46,7 @@ DB_USERNAME="alx"
 DB_PASSWORD="alxroot"
 DB_NAME="orpen_weather_db"
 DB_ADMIN_EMAIL="alx@root.com"
+API_KEY="2db21560ff5f54c94b8d81e901576f84"
 ```
 
 **4 - Run on terminal the docker compose to up all services db and admin:** 
