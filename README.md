@@ -4,9 +4,9 @@
 
 This is an rest api that consult weather data without the need for identification by the user.
 
-🛠️*This project is under development*🛠️
+🎆*This project is on MVP*🎇
 
-![giphy](https://github.com/upALX/All-Assets/blob/main/construction-little-girl.webp)
+![giphy](https://github.com/upALX/All-Assets/blob/main/gif-tompero-go.webp)
 
 ---
 
@@ -15,6 +15,7 @@ This is an rest api that consult weather data without the need for identificatio
 ![Node.js](https://img.shields.io/badge/-Node.js-05122A?style=flat&logo=Node.js)&nbsp;
 ![NestJS](https://img.shields.io/badge/-NestJS-05122A?style=flat&logo=NestJS)&nbsp;
 ![postgresql](https://img.shields.io/badge/-postgresql-05122A?style=flat&logo=postgresql)&nbsp;
+![TypeORM](https://img.shields.io/badge/-TypeORM-05122A?style=flat&logo=typeform)&nbsp;
 ![docker](https://img.shields.io/badge/-Docker-05122A?style=flat&logo=docker)&nbsp;
 
 ## How to use 🫁
@@ -23,6 +24,8 @@ This is an rest api that consult weather data without the need for identificatio
   - Docker >= 24.0.7
   - Docker compose >= 1.29.2
   - Node >= 18.17.1
+
+*Please, make sure you have all requirements installed to run this app*
 
 **1 - Clone this repo:**
 ```
@@ -41,7 +44,7 @@ DB_HOST=LOCALHOST
 DB_PORT=5432
 DB_USERNAME="alx"
 DB_PASSWORD="alxroot"
-DB_NAME="weather_app"
+DB_NAME="orpen_weather_db"
 DB_ADMIN_EMAIL="alx@root.com"
 ```
 
@@ -68,20 +71,20 @@ docker-compose up
 - Into page of scripts, put the SQL script below and run (F5):
     ```
     CREATE TABLE IF NOT EXISTS "weather" (
-    id SERIAL PRIMARY KEY,
-    weather_key UUID NOT NULL,
-    city VARCHAR(85) NOT NULL,
-    country VARCHAR(2) NOT NULL,
-    weather_data JSONB,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+	id SERIAL PRIMARY KEY,
+	weather_key UUID NOT NULL,
+	city VARCHAR(85) NOT NULL,
+	country VARCHAR(2) NOT NULL,
+	weather_data JSONB,
+	created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
     CREATE TABLE IF NOT EXISTS "webhooks" (
-    id SERIAL PRIMARY KEY,
-		webhook_key UUID NOT NULL,
-    city VARCHAR(85) NOT NULL,
-    country VARCHAR(2) NOT NULL,
-    webhook_url VARCHAR(700) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+	id SERIAL PRIMARY KEY,
+	webhook_key UUID NOT NULL,
+    	city VARCHAR(85) NOT NULL,
+    	country VARCHAR(2) NOT NULL,
+    	webhook_url VARCHAR(700) NOT NULL,
+    	created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
     
     ```
