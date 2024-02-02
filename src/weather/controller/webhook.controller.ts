@@ -4,6 +4,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { WeatherModel } from "../model/weather.model";
 import { WebhookModel } from "../model/webhook.model";
 import { WeatherWebhookRequestDTO } from "../dto/weatherWebhookRequest.dto";
+import { throwError } from "rxjs";
 
 @Injectable()
 export class WebhookController{
@@ -33,11 +34,52 @@ export class WebhookController{
         return weatherWebhookDTO
       }
 
+      public async updateWeatherWebhookController(
+        webhook_key: string,
+        city?: string, 
+        country?: string, 
+        webhook_url?: string
+      ){
+        if (webhook_key.length < 36){
+          const error = new Error(`The webhook key ${webhook_key} is lower than 36 and probably not exist on database.`);
+          (error as any).statusCode = 404; // Set the status code property
+          throw error;
+        }
+
+        const webhook_model = await this.webhookRepository.findWebhookByKey(
+          webhook_key
+        );
+
+        if (webhook_model == null){
+          const error = new Error(`The webhook ${webhook_key} searched was not found.`);
+          (error as any).statusCode = 404; // Set the status code property
+          throw error;
+        }
+
+        const currentDate: Date = new Date();
+
+        console.log(new Date().toISOString().slice(0, 19));
+
+        webhook_model.city = city;
+        webhook_model.country = country;
+        webhook_model.webhookURL = webhook_url;
+        webhook_model.updatedAt = currentDate.toISOString().slice(0, 19);
+
+        const newWeatherWebhookModel = await this.webhookRepository.updateWeatherWebhookRepository(webhook_key, webhook_model);
+
+        const WeatherModelDTO = new WebhookRegistryResponseDTO(
+          newWeatherWebhookModel.webhookKey, 
+          newWeatherWebhookModel.webhookURL
+        );
+        
+        return WeatherModelDTO
+      }
+
       public async getRequestSubscriptionsWebhook(country: string, city: string) {
         
         const arraySubscriptionsWebhookModels = await this.webhookRepository.findAllSubscriptionsWebhookByParams(
           country, city
-        ) 
+        );
 
         console.log(`Webhook models found are: ${arraySubscriptionsWebhookModels}`)
 

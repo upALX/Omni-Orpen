@@ -10,7 +10,7 @@ export class WebhookModel{
     @Generated('uuid')
     webhookKey: string;
 
-    @Column({name: 'city', length: 21, nullable: false})
+    @Column({name: 'city', length: 85, nullable: false})
     city: string;
     
     @Column({name: 'country', length: 2, nullable: false})
@@ -21,4 +21,7 @@ export class WebhookModel{
 
     @CreateDateColumn({name: 'created_at', nullable: false})
     createdAt: string;
+
+    @Column({name: 'updated_at', type: 'date', nullable: true})
+    updatedAt: string
 }

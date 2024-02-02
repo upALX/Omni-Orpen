@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, Query, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, ValidationPipe } from '@nestjs/common';
 import { WeatherController } from './controller/weather.controller';
 import { weatherValidationParamsDTO } from './dto/weatherValidationParams';
 import { WebhookRegistryRequestDTO } from './dto/webhookRegistryRequest.dto';
 import { WebhookController } from './controller/webhook.controller';
+import { WebhookValidationBodyDTO } from './dto/webhookValidationBody.dto';
 
 @Controller('/weather')
 export class WeatherResource {
@@ -43,5 +44,16 @@ export class WeatherResource {
     const weatherWebhookDTO = await this.webhookController.registryWeatherWebhook(city.toLowerCase().trim(), country.toLowerCase().trim(), webhook_url.trim())
 
     return JSON.stringify(weatherWebhookDTO)
+  }
+  @Patch('/subscription/webhook/:uuid')
+  public async PathUpdateWebhooksResource(@Param('uuid') uuid: string, @Body() req: WebhookValidationBodyDTO){
+
+    console.log(uuid)
+
+    const {city, country, webhook_url} = req;
+
+    const newWeatherWebhookDTO = await this.webhookController.updateWeatherWebhookController(uuid, city.toLowerCase().trim(), country.toLowerCase().trim(), webhook_url.trim());
+
+    return JSON.stringify(newWeatherWebhookDTO)
   }
 }
