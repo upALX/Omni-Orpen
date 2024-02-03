@@ -10,5 +10,6 @@ export class weatherValidationParamsDTO{
 
     @IsString()
     @IsNotEmpty()
+    @Length(1,85)
     city: string;
 }
