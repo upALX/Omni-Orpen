@@ -11,7 +11,7 @@ export class WeatherResource {
 
   @Get('/hello')
   getHello(): string {
-    return JSON.stringify(this.weatherController.getHello());
+    return this.weatherController.getHello();
   }
 
   @Get('/data')
@@ -26,14 +26,14 @@ export class WeatherResource {
       country, city
     )
 
-    return JSON.stringify(weatherResponseDTO)
+    return weatherResponseDTO
   }
 
   @Get('/history')
   public async getHistoryRequests(){
     const weatherResponseDTO = await this.weatherController.getAllDataWeatherRequest()
 
-    return JSON.stringify(weatherResponseDTO)
+    return weatherResponseDTO
   }
 
   @Post('/subscription/webhook')
@@ -43,7 +43,7 @@ export class WeatherResource {
 
     const weatherWebhookDTO = await this.webhookController.registryWeatherWebhook(city.toLowerCase().trim(), country.toLowerCase().trim(), webhook_url.trim())
 
-    return JSON.stringify(weatherWebhookDTO)
+    return weatherWebhookDTO
   }
 
   @Delete('/subscribe/webhook/:webhook_key')
