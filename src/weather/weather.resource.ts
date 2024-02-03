@@ -54,6 +54,6 @@ export class WeatherResource {
 
     const newWeatherWebhookDTO = await this.webhookController.updateWeatherWebhookController(uuid, city.toLowerCase().trim(), country.toLowerCase().trim(), webhook_url.trim());
 
-    return JSON.stringify(newWeatherWebhookDTO)
+    return newWeatherWebhookDTO
   }
 }

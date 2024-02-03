@@ -41,7 +41,7 @@ export class WebhookController{
         webhook_url?: string
       ){
         if (webhook_key.length < 36){
-          const error = new Error(`The webhook key ${webhook_key} is lower than 36 and probably not exist on database.`);
+          const error = new Error(`The webhook key ${webhook_key} is not valid and probably this subscription do not exist.`);
           (error as any).statusCode = 404; // Set the status code property
           throw error;
         }
