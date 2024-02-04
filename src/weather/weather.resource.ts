@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res, ValidationPipe } from '@nestjs/common';
 import { WeatherController } from './controller/weather.controller';
 import { weatherValidationParamsDTO } from './dto/weatherValidationParams';
 import { WebhookRegistryRequestDTO } from './dto/webhookRegistryRequest.dto';
@@ -43,5 +43,13 @@ export class WeatherResource {
     const weatherWebhookDTO = await this.webhookController.registryWeatherWebhook(city.toLowerCase().trim(), country.toLowerCase().trim(), webhook_url.trim())
 
     return weatherWebhookDTO
+  }
+
+  @Get('/webhooks')
+  public async getWebhooks(){
+
+    const webhookModelsDTO = await this.webhookController.getAllWebhooks()
+
+    return webhookModelsDTO
   }
 }
