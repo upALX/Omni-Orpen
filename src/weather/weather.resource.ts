@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query, Res, ValidationPipe } from '@nestjs/common';
 import { WeatherController } from './controller/weather.controller';
 import { weatherValidationParamsDTO } from './dto/weatherValidationParams';
 import { WebhookRegistryRequestDTO } from './dto/webhookRegistryRequest.dto';
@@ -47,8 +47,12 @@ export class WeatherResource {
   }
 
   @Delete('/subscribe/webhook/:webhook_key')
-  public async deleteWebhookResource(@Param(new ValidationPipe({transform: true})) webhook_key: IDValidationRequestDTO){
-    console.log(webhook_key)
-    return webhook_key
+  @HttpCode(204)
+  public async deleteWebhookResource(@Param(new ValidationPipe({transform: true})) webhook_key: IDValidationRequestDTO, @Res() res: Response){
+    console.log(typeof webhook_key.webhook_key)
+
+    await this.webhookController.deleteWebhookByID(webhook_key.webhook_key)
+
+    return res
   } 
 }

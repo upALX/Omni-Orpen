@@ -25,6 +25,23 @@ export class WebhookRepository {
       return model
     }
 
+    public async findWebhookModelByID(webhook_key: string): Promise<WebhookModel | null> {
+      const webhook = await this.webhookRepository.findOne({
+        where: {
+          webhookKey: webhook_key
+        }
+      }) 
+
+      console.log(`On search by ID the model is  ${webhook}`)
+
+      return webhook
+    }
+
+    public async deleteWebhookByID(id: number){
+      console.log(`On DELETE the id IS:  ${id}`)
+      this.webhookRepository.delete(id)
+    }
+
     public async findWebhookModelByGenerics(
       city: string, 
       country: string, 

@@ -1,6 +1,6 @@
 import { WebhookRepository } from "../repository/webhook.repository";
 import { WebhookRegistryResponseDTO } from '../dto/webhookRegistryResponse.dto';
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { WeatherModel } from "../model/weather.model";
 import { WebhookModel } from "../model/webhook.model";
 import { WeatherWebhookRequestDTO } from "../dto/weatherWebhookRequest.dto";
@@ -31,6 +31,19 @@ export class WebhookController{
         )
         
         return weatherWebhookDTO
+      }
+
+      public async deleteWebhookByID(webhook_key: string) {
+
+        const webhookModel = await this.webhookRepository.findWebhookModelByID(webhook_key)
+        
+        if(webhookModel == null){
+          throw new NotFoundException('The webhook_key ${webhook_key} was not found. Verify if is the right webhook_key.');
+        }
+
+        this.webhookRepository.deleteWebhookByID(webhookModel.id)
+
+        return 
       }
 
       public async getRequestSubscriptionsWebhook(country: string, city: string) {
