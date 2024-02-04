@@ -41,7 +41,7 @@ export class WebhookController{
           throw new NotFoundException('The webhook_key ${webhook_key} was not found. Verify if is the right webhook_key.');
         }
 
-        this.webhookRepository.deleteWebhookByID(webhookModel.id)
+        await this.webhookRepository.deleteWebhookByID(webhookModel.id)
 
         return 
       }
