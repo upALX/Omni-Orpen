@@ -4,6 +4,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { WeatherModel } from "../model/weather.model";
 import { WebhookModel } from "../model/webhook.model";
 import { WeatherWebhookRequestDTO } from "../dto/weatherWebhookRequest.dto";
+import { WebhooksHistoryResponseDTO } from "../dto/webhooksHistoryResponse.dto";
 
 @Injectable()
 export class WebhookController{
@@ -31,6 +32,22 @@ export class WebhookController{
         )
         
         return weatherWebhookDTO
+      }
+
+      public async getAllWebhooks(): Promise<WebhooksHistoryResponseDTO[]>{
+
+        const webhookModels = await this.webhookRepository.getAllWebhooks()
+        
+        const webhookModelsDTO = await webhookModels.map(
+          (webhookModel) => new WebhooksHistoryResponseDTO(
+              webhookModel.webhookKey,
+              webhookModel.country,
+              webhookModel.city,
+              webhookModel.webhookURL
+            )
+        )
+
+        return webhookModelsDTO
       }
 
       public async getRequestSubscriptionsWebhook(country: string, city: string) {
