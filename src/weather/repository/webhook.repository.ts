@@ -12,6 +12,12 @@ export class WebhookRepository {
     private webhookModelDB: WebhookModel
   ) {}
 
+  public async getAllWebhooks(): Promise<WebhookModel[]>{
+    const webhookModels = this.webhookRepository.find()
+
+    return webhookModels
+  }
+
     public async saveWeatherWebhook(city: string, country: string, webhookURL: string){
 
       this.webhookModelDB = new WebhookModel()

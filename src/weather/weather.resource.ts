@@ -36,7 +36,7 @@ export class WeatherResource {
     return weatherResponseDTO
   }
 
-  @Post('/subscription/webhook')
+  @Post('/subscribe/webhook')
   public async postRegistryWebhooks(@Body() req: WebhookRegistryRequestDTO){
 
     const {city, country, webhook_url} = req;
@@ -55,4 +55,12 @@ export class WeatherResource {
 
     return res
   } 
+
+  @Get('/webhooks')
+  public async getWebhooks(){
+
+    const webhookModelsDTO = await this.webhookController.getAllWebhooks()
+
+    return webhookModelsDTO
+  }
 }

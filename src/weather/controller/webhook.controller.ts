@@ -4,6 +4,7 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestj
 import { WeatherModel } from "../model/weather.model";
 import { WebhookModel } from "../model/webhook.model";
 import { WeatherWebhookRequestDTO } from "../dto/weatherWebhookRequest.dto";
+import { WebhooksHistoryResponseDTO } from "../dto/webhooksHistoryResponse.dto";
 
 @Injectable()
 export class WebhookController{
@@ -33,6 +34,7 @@ export class WebhookController{
         return weatherWebhookDTO
       }
 
+
       public async deleteWebhookByID(webhook_key: string) {
 
         const webhookModel = await this.webhookRepository.findWebhookModelByID(webhook_key)
@@ -44,6 +46,21 @@ export class WebhookController{
         await this.webhookRepository.deleteWebhookByID(webhookModel.id)
 
         return 
+        
+      public async getAllWebhooks(): Promise<WebhooksHistoryResponseDTO[]>{
+
+        const webhookModels = await this.webhookRepository.getAllWebhooks()
+        
+        const webhookModelsDTO = await webhookModels.map(
+          (webhookModel) => new WebhooksHistoryResponseDTO(
+              webhookModel.webhookKey,
+              webhookModel.country,
+              webhookModel.city,
+              webhookModel.webhookURL
+            )
+        )
+
+        return webhookModelsDTO
       }
 
       public async getRequestSubscriptionsWebhook(country: string, city: string) {
