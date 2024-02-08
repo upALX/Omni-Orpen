@@ -6,7 +6,7 @@ export class WebhookModel{
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({name: 'webhook_key', nullable: false})
+    @Column({name: 'webhook_key', nullable: false, type: 'real'})
     @Generated('uuid')
     webhookKey: string;
 
