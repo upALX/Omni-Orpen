@@ -1,10 +1,10 @@
 import { WebhookRepository } from "../repository/webhook.repository";
 import { WebhookRegistryResponseDTO } from '../dto/webhookRegistryResponse.dto';
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { WeatherModel } from "../model/weather.model";
 import { WebhookModel } from "../model/webhook.model";
 import { WeatherWebhookRequestDTO } from "../dto/weatherWebhookRequest.dto";
-import { throwError } from "rxjs";
+import { WebhooksHistoryResponseDTO } from "../dto/webhooksHistoryResponse.dto";
 
 @Injectable()
 export class WebhookController{
@@ -73,6 +73,35 @@ export class WebhookController{
         );
         
         return WeatherModelDTO
+      }
+
+
+      public async deleteWebhookByID(webhook_key: string) {
+
+        const webhookModel = await this.webhookRepository.findWebhookModelByID(webhook_key)
+        
+        if(webhookModel == null){
+          throw new NotFoundException('The webhook_key ${webhook_key} was not found. Verify if is the right webhook_key.');
+        }
+
+        await this.webhookRepository.deleteWebhookByID(webhookModel.id)
+
+        return 
+        
+      public async getAllWebhooks(): Promise<WebhooksHistoryResponseDTO[]>{
+
+        const webhookModels = await this.webhookRepository.getAllWebhooks()
+        
+        const webhookModelsDTO = await webhookModels.map(
+          (webhookModel) => new WebhooksHistoryResponseDTO(
+              webhookModel.webhookKey,
+              webhookModel.country,
+              webhookModel.city,
+              webhookModel.webhookURL
+            )
+        )
+
+        return webhookModelsDTO
       }
 
       public async getRequestSubscriptionsWebhook(country: string, city: string) {
