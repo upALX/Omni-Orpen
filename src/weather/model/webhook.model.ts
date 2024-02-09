@@ -21,4 +21,7 @@ export class WebhookModel{
 
     @CreateDateColumn({name: 'created_at', nullable: false})
     createdAt: string;
+
+    @Column({name: 'updated_at', type: 'date', nullable: true})
+    updatedAt: string
 }
