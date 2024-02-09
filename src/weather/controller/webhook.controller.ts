@@ -76,7 +76,7 @@ export class WebhookController{
       }
 
 
-      public async deleteWebhookByID(webhook_key: string) {
+      public async deleteWebhookByID(webhook_key: string): Promise<void> {
 
         const webhookModel = await this.webhookRepository.findWebhookModelByID(webhook_key)
         
@@ -87,7 +87,7 @@ export class WebhookController{
         await this.webhookRepository.deleteWebhookByID(webhookModel.id)
 
         return 
-        
+      }
       public async getAllWebhooks(): Promise<WebhooksHistoryResponseDTO[]>{
 
         const webhookModels = await this.webhookRepository.getAllWebhooks()

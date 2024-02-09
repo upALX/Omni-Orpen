@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, HttpCode, Param, Post, Query, Res, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, HttpCode, Param, Post, Query, ValidationPipe } from '@nestjs/common';
 import { WeatherController } from './controller/weather.controller';
 import { weatherValidationParamsDTO } from './dto/weatherValidationParams';
 import { WebhookRegistryRequestDTO } from './dto/webhookRegistryRequest.dto';
@@ -14,17 +14,19 @@ export class WeatherResource {
   getHello(): string {
     return this.weatherController.getHello();
   }
-
+  // replace(/[^\w\s]/g, '').toLowerCase().trim();
   @Get('/data')
   public async getWeatherData(@Query(new ValidationPipe({transform: true}))params: weatherValidationParamsDTO){
 
     const country = params.country.replace(/[^\w\s]/g, '').toLowerCase().trim();
-    const city = params.city.replace(/[^\w\s]/g, '').toLowerCase();
+    const city = params.city.replace(/[^\w\sáÁàÀâÂãÃéÉêÊíÍóÓôÔõÕúÚüÜ]/g, '');
+
+    const city_formated = city.replace(/[áàâã]/g, 'a').replace(/[éê]/g, 'e').replace(/[í]/g, 'i').replace(/[óôõ]/g, 'o').replace(/[ú]/g, 'u').replace(/[ÁÀÂÃ]/g, 'A').replace(/[ÉÊ]/g, 'E').replace(/[Í]/g, 'I').replace(/[ÓÔÕ]/g, 'O').replace(/[Ú]/g, 'U');
 
     console.log(country, city)
 
     const weatherResponseDTO = await this.weatherController.getAllDataWeather(
-      country, city
+      country, city_formated
     )
 
     return weatherResponseDTO
@@ -49,12 +51,12 @@ export class WeatherResource {
 
   @Delete('/subscribe/webhook/:webhook_key')
   @HttpCode(204)
-  public async deleteWebhookResource(@Param(new ValidationPipe({transform: true})) webhook_key: IDValidationRequestDTO, @Res() res: Response){
+  public async deleteWebhookResource(@Param(new ValidationPipe({transform: true})) webhook_key: IDValidationRequestDTO){
     console.log(typeof webhook_key.webhook_key)
 
     await this.webhookController.deleteWebhookByID(webhook_key.webhook_key)
 
-    return res
+    return 
   } 
 
   @Get('/webhooks')

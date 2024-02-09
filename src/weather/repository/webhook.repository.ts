@@ -43,9 +43,11 @@ export class WebhookRepository {
       return webhook
     }
 
-    public async deleteWebhookByID(id: number){
+    public async deleteWebhookByID(id: number): Promise<void>{
       console.log(`On DELETE the id IS:  ${id}`)
       this.webhookRepository.delete(id)
+
+      return 
     }
 
     public async findWebhookModelByGenerics(
