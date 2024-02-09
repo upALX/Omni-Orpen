@@ -34,8 +34,49 @@ export class WebhookController{
         return weatherWebhookDTO
       }
 
+      public async updateWeatherWebhookController(
+        webhook_key: string,
+        city?: string, 
+        country?: string, 
+        webhook_url?: string
+      ){
+        if (webhook_key.length < 36){
+          const error = new Error(`The webhook key ${webhook_key} is not valid and probably this subscription do not exist.`);
+          (error as any).statusCode = 404; // Set the status code property
+          throw error;
+        }
 
-      public async deleteWebhookByID(webhook_key: string) {
+        const webhook_model = await this.webhookRepository.findWebhookByKey(
+          webhook_key
+        );
+
+        if (webhook_model == null){
+          const error = new Error(`The webhook ${webhook_key} searched was not found.`);
+          (error as any).statusCode = 404; // Set the status code property
+          throw error;
+        }
+
+        const currentDate: Date = new Date();
+
+        console.log(new Date().toISOString().slice(0, 19));
+
+        webhook_model.city = city;
+        webhook_model.country = country;
+        webhook_model.webhookURL = webhook_url;
+        webhook_model.updatedAt = currentDate.toISOString().slice(0, 19);
+
+        const newWeatherWebhookModel = await this.webhookRepository.updateWeatherWebhookRepository(webhook_key, webhook_model);
+
+        const WeatherModelDTO = new WebhookRegistryResponseDTO(
+          newWeatherWebhookModel.webhookKey, 
+          newWeatherWebhookModel.webhookURL
+        );
+        
+        return WeatherModelDTO
+      }
+
+
+      public async deleteWebhookByID(webhook_key: string): Promise<void> {
 
         const webhookModel = await this.webhookRepository.findWebhookModelByID(webhook_key)
         
@@ -46,7 +87,7 @@ export class WebhookController{
         await this.webhookRepository.deleteWebhookByID(webhookModel.id)
 
         return 
-        
+      }
       public async getAllWebhooks(): Promise<WebhooksHistoryResponseDTO[]>{
 
         const webhookModels = await this.webhookRepository.getAllWebhooks()
@@ -67,7 +108,7 @@ export class WebhookController{
         
         const arraySubscriptionsWebhookModels = await this.webhookRepository.findAllSubscriptionsWebhookByParams(
           country, city
-        ) 
+        );
 
         console.log(`Webhook models found are: ${arraySubscriptionsWebhookModels}`)
 

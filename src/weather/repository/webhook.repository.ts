@@ -43,9 +43,11 @@ export class WebhookRepository {
       return webhook
     }
 
-    public async deleteWebhookByID(id: number){
+    public async deleteWebhookByID(id: number): Promise<void>{
       console.log(`On DELETE the id IS:  ${id}`)
       this.webhookRepository.delete(id)
+
+      return 
     }
 
     public async findWebhookModelByGenerics(
@@ -80,5 +82,25 @@ export class WebhookRepository {
 
       return allSubscriptionsModels
 
+    }
+
+    public async findWebhookByKey(webhook_key: string){
+      const webhook_model = await this.webhookRepository.findOne(
+        {where: {webhookKey: webhook_key}}
+      )
+
+      console.log(`The webhook model finded is: ${webhook_model}`)
+
+      return webhook_model
+    }
+
+    public async updateWeatherWebhookRepository(id: string, webhook_model: WebhookModel): Promise<WebhookModel>{
+
+
+      const newWebhookModel = await this.webhookRepository.save(
+        webhook_model
+      ) 
+
+      return newWebhookModel
     }
 }

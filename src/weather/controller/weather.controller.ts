@@ -31,7 +31,7 @@ export class WeatherController {
 
     console.log(`The weather DATA are: ${weatherData}`)
     
-    const weatherModel = await this.weatherRepository.saveWeatherData(city, country, weatherData);
+    const weatherModel = await this.weatherRepository.saveWeatherData(city.replace(" ", '').toLowerCase(), country, weatherData);
 
     const arraySubscriptionsToReceiveWebhook = await this.webhookController.getRequestSubscriptionsWebhook(
       country, city
