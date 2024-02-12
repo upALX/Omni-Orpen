@@ -11,11 +11,13 @@ export class WeatherResource {
   constructor(private weatherController: WeatherController, private webhookController: WebhookController) {}
 
   @Get('/hello')
+  @HttpCode(200)
   getHello(): string {
     return this.weatherController.getHello();
   }
   // replace(/[^\w\s]/g, '').toLowerCase().trim();
   @Get('/data')
+  @HttpCode(200)
   public async getWeatherData(@Query(new ValidationPipe({transform: true}))params: weatherValidationParamsDTO){
 
     const country = params.country.replace(/[^\w\s]/g, '').toLowerCase().trim();
@@ -31,6 +33,7 @@ export class WeatherResource {
   }
 
   @Get('/history')
+  @HttpCode(200)
   public async getHistoryRequests(){
     const weatherResponseDTO = await this.weatherController.getAllDataWeatherRequest()
 
@@ -38,6 +41,7 @@ export class WeatherResource {
   }
 
   @Post('/webhook/subscribe')
+  @HttpCode(201)
   public async postRegistryWebhooks(@Body() req: WebhookRegistryRequestDTO){
 
     const {city, country, webhook_url} = req;
@@ -48,13 +52,16 @@ export class WeatherResource {
   }
 
   @Get('/webhooks')
+  @HttpCode(200)
   public async getWebhooks(){
 
     const webhookModelsDTO = await this.webhookController.getAllWebhooks()
 
     return webhookModelsDTO
   }
+
   @Patch('/webhook/subscription/:uuid')
+  @HttpCode(200)
   public async PathUpdateWebhooksResource(@Param('uuid') uuid: string, @Body() req: WebhookValidationBodyDTO){
 
     const {city, country, webhook_url} = req;
