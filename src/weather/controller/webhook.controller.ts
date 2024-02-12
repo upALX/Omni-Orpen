@@ -4,7 +4,6 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestj
 import { WeatherModel } from "../model/weather.model";
 import { WebhookModel } from "../model/webhook.model";
 import { WeatherWebhookRequestDTO } from "../dto/weatherWebhookRequest.dto";
-import { WebhooksHistoryResponseDTO } from "../dto/webhooksHistoryResponse.dto";
 
 @Injectable()
 export class WebhookController{
@@ -20,7 +19,7 @@ export class WebhookController{
         if( webhookListModel.length > 0){
           throw new HttpException({
           status: HttpStatus.BAD_REQUEST,
-          error: `On database already exists a subscription with the url ${webhookURL} and ${city} + ${country}.`,
+          error: `On database already exists a subscription with the url ${webhookURL} city ${city} and country code ${country}.`,
         }, HttpStatus.BAD_REQUEST);
         }
 
@@ -69,7 +68,9 @@ export class WebhookController{
 
         const WeatherModelDTO = new WebhookRegistryResponseDTO(
           newWeatherWebhookModel.webhookKey, 
-          newWeatherWebhookModel.webhookURL
+          newWeatherWebhookModel.webhookURL,
+          newWeatherWebhookModel.city,
+          newWeatherWebhookModel.country,
         );
         
         return WeatherModelDTO
@@ -88,16 +89,16 @@ export class WebhookController{
 
         return 
       }
-      public async getAllWebhooks(): Promise<WebhooksHistoryResponseDTO[]>{
+      public async getAllWebhooks(): Promise<WebhookRegistryResponseDTO[]>{
 
         const webhookModels = await this.webhookRepository.getAllWebhooks()
         
         const webhookModelsDTO = await webhookModels.map(
-          (webhookModel) => new WebhooksHistoryResponseDTO(
+          (webhookModel) => new WebhookRegistryResponseDTO(
               webhookModel.webhookKey,
+              webhookModel.webhookURL,
               webhookModel.country,
               webhookModel.city,
-              webhookModel.webhookURL
             )
         )
 
