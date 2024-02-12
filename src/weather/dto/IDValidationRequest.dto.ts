@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsString, IsUUID, Length } from "class-validator";
-import { UUID } from "crypto";
 
 export class IDValidationRequestDTO{
 
