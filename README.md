@@ -102,7 +102,6 @@ npm run start
 ```
 docker restart $(docker ps -q)
 ```
-
 ---
 *To access all features of this API, click [here](https://upalx.notion.site/OrpenWeather-Docs-9cf62cf2bae7455f97cb5343090c0138?pvs=4) and learn how to use with the [Orpen Weather DOCS](https://upalx.notion.site/OrpenWeather-Docs-9cf62cf2bae7455f97cb5343090c0138?pvs=4).*
 
